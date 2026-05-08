@@ -41,7 +41,7 @@ const Analytics = () => {
                     whileInView={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.8 }}
                     viewport={{ once: true }}
-                    className="">
+                    className="text-center mb-16">
                     <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
                         Platform
                         <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent"> Analytics</span>
