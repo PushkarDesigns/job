@@ -18,7 +18,6 @@ const App = () => {
   return (
     <>
       <div>
-
         <Router>
           <Routes>
             {/* Public Routes */}
