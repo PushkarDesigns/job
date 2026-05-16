@@ -184,10 +184,42 @@ exports.updateJob = async (req, res) => {
 
 // @desc    Delete a job (Employer only)
 exports.deleteJob = async (req, res) => {
+    try {
+        const job = await Job.findById(req.params.id);
+        if (!job) return res.status(404).json({ message: "Job not found" });
 
+        if (job.company.toString() !== req.user._id.toString()) {
+            return res
+                .status(403)
+                .json({ message: "Not authorized to delete this job" });
+        }
+
+        await job.deleteOne();
+        res.json({ message: "Job deleted successfully" });
+    } catch (err) {
+        res.status(500).json({ message: err.message });
+    }
 };
+
 
 // @desc    Toggle Close Status for a job (Employer only)
 exports.toggleCloseJob = async (req, res) => {
+    try {
+        const job = await Job.findById(req.params.id);
+        if (!job) return res.status(404).json({ message: "Job not found" });
 
+        if (job.company.toString() !== req.user._id.toString()) {
+            return res
+                .status(403)
+                .json({ message: "Not authorized to close this job" });
+        }
+
+        job.isClosed = !job.isClosed;
+        await job.save();
+
+        res.json({ message: "Job marked as closed" });
+    } catch (err) {
+        res.status(500).json({ message: err.message });
+    }
 };
+
