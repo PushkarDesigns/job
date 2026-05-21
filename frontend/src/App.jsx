@@ -13,11 +13,12 @@ import EmployerDashboard from "./pages/Employer/EmployerDashboard.jsx";
 import JobPostingForm from "./pages/Employer/JobPostingForm.jsx";
 import ManageJobs from "./pages/Employer/ManageJobs.jsx";
 import EmployerProfilePage from "./pages/Employer/EmployerProfilePage.jsx";
+import { AuthProvider } from "./context/AuthContext";
 
 const App = () => {
   return (
     <>
-      <div>
+      <AuthProvider>
         <Router>
           <Routes>
             {/* Public Routes */}
@@ -52,7 +53,7 @@ const App = () => {
             },
           }}
         />
-      </div>
+      </AuthProvider>
     </>
   );
 };

@@ -19,30 +19,47 @@ export const AuthProvider = ({ children }) => {
         checkAuthStatus();
     }, []);
 
-   const checkAuthStatus = async () => {
-  try {
-    const token = localStorage.getItem('token');
-    const userStr = localStorage.getItem('user');
+    const checkAuthStatus = async () => {
+        try {
+            const token = localStorage.getItem('token');
+            const userStr = localStorage.getItem('user');
 
-    if (token && userStr) {
-      const userData = JSON.parse(userStr);
-      setUser(userData);
-      setIsAuthenticated(true);
-    }
-  } catch (error) {
-    console.error('Auth check failed:', error);
-    logout();
-  } finally {
-    setLoading(false);
-  }
-};
+            if (token && userStr) {
+                const userData = JSON.parse(userStr);
+                setUser(userData);
+                setIsAuthenticated(true);
+            }
+        } catch (error) {
+            console.error('Auth check failed:', error);
+            logout();
+        } finally {
+            setLoading(false);
+        }
+    };
 
+    const login = (userData, token) => {
+        localStorage.setItem('token', token);
+        localStorage.setItem('user', JSON.stringify(userData));
 
-    const login = (userData, token) => { };
+        setUser(userData);
+        setIsAuthenticated(true);
+    };
 
-    const logout = () => { };
+    const logout = () => {
+        localStorage.removeItem('token');
+        localStorage.removeItem('refreshToken');
+        localStorage.removeItem('user');
 
-    const updateUser = (updatedUserData) => { };
+        setUser(null);
+        setIsAuthenticated(false);
+        window.location.href = '/';
+    };
+
+    const updateUser = (updatedUserData) => {
+        const newUserData = { ...user, ...updatedUserData };
+        localStorage.setItem('user', JSON.stringify(newUserData));
+        setUser(newUserData);
+    };
 
     const value = {
         user,

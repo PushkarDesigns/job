@@ -10,8 +10,12 @@ import {
   CheckCircle
 } from 'lucide-react';
 import { validateEmail } from '../../utils/helper';
+import { useAuth } from '../../context/AuthContext';
+import { API_PATHS } from '../../utils/apiPaths';
+import axiosInstance from '../../utils/axiosInstance';
 
 const Login = () => {
+  const { login } = useAuth();
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -69,10 +73,43 @@ const Login = () => {
     setFormState(prev => ({ ...prev, loading: true }));
 
     try {
-      //   // Login API integration
-      await new Promise(resolve => setTimeout(resolve, 2000));
-      setFormState(prev => ({ ...prev, loading: false, success: true }));
-      console.log("Logged in with:", formData);
+      // Login API integration
+      const response = await axiosInstance.post(API_PATHS.AUTH.LOGIN, {
+        email: formData.email,
+        password: formData.password,
+        rememberMe: formData.rememberMe
+      });
+
+      setFormState(prev => ({
+        ...prev,
+        loading: false,
+        success: true,
+        errors: {}
+      }));
+
+      const { token, role } = response.data;
+
+      if (token) {
+        login(response.data, token);
+
+        // Redirect based on role
+        setTimeout(() => {
+          window.location.href =
+            role === "employer"
+              ? "/employer-dashboard"
+              : "/find-jobs";
+        }, 2000);
+      }
+
+      // Redirect based on user role
+      setTimeout(() => {
+        const redirectPath = user.role === 'employer'
+          ? '/employer-dashboard'
+          : '/find-jobs';
+        window.location.href = redirectPath;
+      }, 1500);
+
+
     } catch (error) {
       setFormState(prev => ({
         ...prev,
