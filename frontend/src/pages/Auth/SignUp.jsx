@@ -118,6 +118,42 @@ const SignUp = () => {
 
     try {
       // API call logic would go here
+      let avatarUrl = "";
+
+      // Upload image if present
+      if (formData.avatar) {
+        const imgUploadRes = await uploadImage(formData.avatar);
+        avatarUrl = imgUploadRes.imageUrl || "";
+      }
+
+      const response = await axiosInstance.post(API_PATHS.AUTH.REGISTER, {
+        name: formData.fullName,
+        email: formData.email,
+        password: formData.password,
+        role: formData.role,
+        avatar: avatarUrl || "",
+      });
+
+      // Handle successful registration
+      setFormState((prev) => ({
+        ...prev,
+        loading: false,
+        success: true,
+        errors: {},
+      }));
+
+      const { token } = response.data;
+      if (token) {
+        login(response.data, token);
+
+        // Redirect based on role
+        setTimeout(() => {
+          window.location.href =
+            formData.role === "employer"
+              ? "/employer-dashboard"
+              : "/find-jobs";
+        }, 2000);
+      }
     } catch (error) {
       console.log("error", error);
 
