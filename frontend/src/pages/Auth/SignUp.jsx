@@ -14,8 +14,13 @@ import {
   Loader,
 } from "lucide-react";
 import { validateAvatar, validateEmail, validatePassword } from '../../utils/helper';
+import axiosInstance from '../../utils/axiosInstance';
+import { API_PATHS } from '../../utils/apiPaths';
+import uploadImage from '../../utils/uploadImage';
+import { useAuth } from '../../context/AuthContext'
 
 const SignUp = () => {
+  const { login } = useAuth();
   const [formData, setFormData] = useState({
     fullName: "",
     email: "",
@@ -314,6 +319,7 @@ const SignUp = () => {
               <div className="flex-1">
                 <input
                   type="file"
+                  id='avatar'
                   accept=".jpg,.jpeg,.png"
                   onChange={handleAvatarChange} // You'll need to define this function
                   className="hidden"
