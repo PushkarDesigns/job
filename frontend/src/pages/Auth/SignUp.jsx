@@ -94,7 +94,6 @@ const SignUp = () => {
     }
   };
 
-
   const validateForm = () => {
     const errors = {
       fullName: !formData.fullName ? "Enter full name" : "",

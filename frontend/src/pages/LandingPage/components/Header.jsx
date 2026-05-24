@@ -117,7 +117,7 @@ const Header = () => {
                         {isAuthenticated ? (
                             <div className="flex items-center space-x-4">
                                 <span className="text-gray-700 font-medium">
-                                    Welcome, <span className="text-blue-600">{user?.fullName}</span>
+                                    Welcome, <span className="text-blue-600">{user?.name}</span>
                                 </span>
 
                                 <a

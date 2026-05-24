@@ -19,7 +19,7 @@ const Login = () => {
   const [formData, setFormData] = useState({
     email: '',
     password: '',
-    rememberMe: false
+    // rememberMe: false
   });
 
   const [formState, setFormState] = useState({
@@ -36,10 +36,12 @@ const Login = () => {
 
   // Handle input changes
   const handleInputChange = (e) => {
-    const { name, value } = e.target;
+    // const { name, value } = e.target;
+    const { name: fieldName, value } = e.target;
     setFormData(prev => ({
       ...prev,
-      [name]: value
+      // [name]: value
+      [fieldName]: value 
     }));
 
     // Clear error when user starts typing
@@ -69,52 +71,43 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!validateForm()) return;
+    console.log("LOGIN URL:", API_PATHS.AUTH.LOGIN);
+    console.log("FORM DATA:", formData);
 
     setFormState(prev => ({ ...prev, loading: true }));
 
     try {
-      // Login API integration
       const response = await axiosInstance.post(API_PATHS.AUTH.LOGIN, {
         email: formData.email,
         password: formData.password,
-        rememberMe: formData.rememberMe
       });
-
-      setFormState(prev => ({
-        ...prev,
-        loading: false,
-        success: true,
-        errors: {}
-      }));
 
       const { token, role } = response.data;
 
       if (token) {
         login(response.data, token);
 
-        // Redirect based on role
+        setFormState(prev => ({
+          ...prev,
+          loading: false,
+          success: true,
+          errors: {}
+        }));
+
         setTimeout(() => {
-          window.location.href =
-            role === "employer"
-              ? "/employer-dashboard"
-              : "/find-jobs";
+          window.location.href = role === "employer"
+            ? "/employer-dashboard"
+            : "/find-jobs";
         }, 2000);
       }
-
-      // Redirect based on user role
-      setTimeout(() => {
-        const redirectPath = user.role === 'employer'
-          ? '/employer-dashboard'
-          : '/find-jobs';
-        window.location.href = redirectPath;
-      }, 1500);
-
 
     } catch (error) {
       setFormState(prev => ({
         ...prev,
         loading: false,
-        errors: error.response?.data?.message || 'Login failed. Please your credentials'
+        errors: {
+          submit: error.response?.data?.message || 'Login failed. Please check your credentials'
+        }
       }));
     }
   };
