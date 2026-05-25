@@ -21,6 +21,8 @@ const EmployerDashboard = () => {
   const getDashboardOverView = async () => {
     try {
       setIsLoading(true);
+    }catch{
+      
     }
   }
 
