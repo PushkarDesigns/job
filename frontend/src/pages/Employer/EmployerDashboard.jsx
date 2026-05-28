@@ -41,7 +41,7 @@ useEffect(() => {
 
 
   return (
-    <DashboardLayout>
+    <DashboardLayout activeMenu='employer-dashboard'>
 
     </DashboardLayout>
   )

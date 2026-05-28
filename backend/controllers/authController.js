@@ -42,7 +42,7 @@ exports.login = async (req, res) => {
   try {
     const { email, password } = req.body;
     console.log("REGISTER BODY:", req.body);
-    console.log("VALUES:", { name, email, password, role, avatar });
+    console.log("VALUES:", { email, password });
     
     const user = await User.findOne({ email });
 

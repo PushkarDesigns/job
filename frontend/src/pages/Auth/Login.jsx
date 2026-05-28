@@ -37,11 +37,10 @@ const Login = () => {
   // Handle input changes
   const handleInputChange = (e) => {
     // const { name, value } = e.target;
-    const { name: fieldName, value } = e.target;
+    const { name, value } = e.target;
     setFormData(prev => ({
       ...prev,
-      // [name]: value
-      [fieldName]: value 
+      [name]: value 
     }));
 
     // Clear error when user starts typing
