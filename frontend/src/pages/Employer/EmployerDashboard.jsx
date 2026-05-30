@@ -13,6 +13,8 @@ import axiosInstance from "../../utils/axiosInstance";
 import { API_PATHS } from "../../utils/apiPaths";
 import DashboardLayout from "../../components/Layout/DashboardLayout";
 import LoadingSpinner from "../../components/LoadingSpinner";
+import JobDashboardCard from "../../components/Cards/JobDashboardCard";
+import ApplicantDashboardCard from "../../components/Cards/ApplicantDashboardCard";
 
 const Card = ({ title, headerAction, subtitle, className, children }) => {
   return (
@@ -141,30 +143,101 @@ const EmployerDashboard = () => {
           </div>
 
           {/* Recent Activity */}
-          <div className="">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-0">
             <Card
               title="Recent Job Posts"
               subtitle="Your latest job postings"
               headerAction={
                 <button
-                  className=""
+                  className="text-sm text-blue-600 hover:text-blue-700 font-medium"
                   onClick={() => navigate("/manage-jobs")}
                 >
                   View all
                 </button>
               }
             >
-              <div className="">
+              <div className="space-y-3">
                 {dashboardData?.data?.recentJobs
                   ?.slice(0, 3)
                   ?.map((job, index) => (
-                    <></>
+                    <JobDashboardCard key={index} job={job} />
                   ))}
               </div>
             </Card>
+
+            <Card
+              title="Recent Applications"
+              subtitle="Latest candidate applications"
+              headerAction={
+                <button
+                  className="text-sm text-blue-600 hover:text-blue-700 font-medium"
+                  onClick={() => navigate("/manage-jobs")}
+                >
+                  View all
+                </button>
+              }
+            >
+              <div className="space-y-3">
+                {dashboardData?.data?.recentApplications
+                  ?.slice(0, 3)
+                  ?.map((data, index) => (
+                    <ApplicantDashboardCard
+                      key={index}
+                      applicant={data?.applicant || ""}
+                      position={data?.job?.title || ""}
+                      time={moment(data?.updatedAt).fromNow()}
+                    />
+                  ))}
+              </div>
+            </Card>
+
           </div>
 
-
+          {/* Quick Actions */}
+          <Card
+            title="Quick Actions"
+            subtitle="Common tasks to get you started"
+          >
+            <div className="grid grid-cols-1 sm
+            :grid-cols-2 lg:grid-cols-3 gap-4 ">
+              {[
+                {
+                  title: "Post New Job",
+                  icon: Plus,
+                  color: "bg-blue-50 text-blue-700",
+                  path: "/post-job",
+                },
+                {
+                  title: "Review Applications",
+                  icon: Users,
+                  color: "bg-green-50 text-green-700",
+                  path: "/manage-jobs",
+                },
+                {
+                  title: "Company Settings",
+                  icon: Building2,
+                  color: "bg-orange-50 text-orange-700",
+                  path: "/company-profile",
+                },
+              ].map((action, index) => {
+                const Icon = action.icon;
+                return (
+                  <button
+                    key={index}
+                    onClick={() => navigate(action.path)}
+                    className="flex items-center p-4 rounded-xl border border-gray-100 hover:border-gray-200 hover:shadow-sm transition-all duration-200 text-left">
+                    <div className={`p-2 rounded-lg ${action.color}`}>
+                      <action.icon className="" />
+                      <Icon className="w-5 h-5" />
+                    </div>
+                    <span className="font-medium text-gray-900">
+                      {action.title}
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
+          </Card>
         </div>
       )}
 
