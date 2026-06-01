@@ -14,6 +14,8 @@ import { useLocation, useNavigate } from "react-router-dom";
 import axiosInstance from "../../utils/axiosInstance";
 import { CATEGORIES, JOB_TYPES } from "../../utils/data";
 import toast from "react-hot-toast";
+import InputField from '../../components/Input/InputField';
+import SelectField from '../../components/Input/SelectField';
 
 const JobPostingForm = () => {
   const navigate = useNavigate();
@@ -35,7 +37,21 @@ const JobPostingForm = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isPreview, setIsPreview] = useState(false);
 
-  const handleInputChange = (field, value) => { };
+  const handleInputChange = (field, value) => {
+    setFormData((prev) => ({
+      ...prev,
+      [field]: value,
+    }));
+
+    // Clear error when user starts typing
+    if (errors[field]) {
+      setErrors((prev) => ({
+        ...prev,
+        [field]: "",
+      }));
+    }
+  };
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -81,7 +97,65 @@ const JobPostingForm = () => {
                 </div>
               </div>
 
-              <div className="space-y-8"></div>
+              <div className="space-y-6">
+                {/* Job Title */}
+                <InputField
+                  label="Job Title"
+                  id="jobTitle"
+                  placeholder="e.g., Senior Frontend Developer"
+                  value={formData.jobTitle}
+                  onChange={(e) => handleInputChange("jobTitle", e.target.value)}
+                  error={errors.jobTitle}
+                  required
+                  icon={Briefcase}
+                />
+
+                {/* Location & Remote */}
+                <div className="space-y-4">
+                  <div className="flex flex-col sm:flex-row sm:items-end sm:space-x-4 space-y-4 sm:space-y-0">
+                    <div className="flex-1">
+                      <InputField
+                        label="Location"
+                        id="location"
+                        placeholder="e.g., New York, NY"
+                        value={formData.location}
+                        onChange={(e) =>
+                          handleInputChange("location", e.target.value)
+                        }
+                        error={errors.location}
+                        icon={MapPin}
+                      />
+                    </div>
+                  </div>
+                </div>
+                {/* Category & Job Type */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <SelectField
+                    label="Category"
+                    id="category"
+                    value={formData.category}
+                    onChange={(e) =>
+                      handleInputChange("category", e.target.value)
+                    }
+                    options={CATEGORIES}
+                    placeholder="Select a category"
+                    error={errors.category}
+                    required
+                    icon={Users}
+                  />
+                  <SelectField
+                    label="Job Type"
+                    id="jobType"
+                    value={formData.jobType}
+                    onChange={(e) => handleInputChange("jobType", e.target.value)}
+                    options={JOB_TYPES}
+                    placeholder="Select job type"
+                    error={errors.jobType}
+                    required
+                    icon={Briefcase}
+                  />
+                </div>
+              </div>
             </div>
           </div>
         </div>
