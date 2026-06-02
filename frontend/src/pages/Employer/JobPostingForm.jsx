@@ -16,6 +16,7 @@ import { CATEGORIES, JOB_TYPES } from "../../utils/data";
 import toast from "react-hot-toast";
 import InputField from '../../components/Input/InputField';
 import SelectField from '../../components/Input/SelectField';
+import TextareaField from '../../components/Input/TextareaField';
 
 const JobPostingForm = () => {
   const navigate = useNavigate();
@@ -155,6 +156,19 @@ const JobPostingForm = () => {
                     icon={Briefcase}
                   />
                 </div>
+                {/* Requirements */}
+                <TextareaField
+                  label="Requirements"
+                  id="requirements"
+                  placeholder="List key qualifications and skills..."
+                  value={formData.requirements}
+                  onChange={(e) =>
+                    handleInputChange("requirements", e.target.value)
+                  }
+                  error={errors.requirements}
+                  helperText="Include required skills, experience level, education, and any preferred qualications." required
+                />
+
               </div>
             </div>
           </div>

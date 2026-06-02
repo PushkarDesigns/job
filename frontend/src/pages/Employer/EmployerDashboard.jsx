@@ -227,7 +227,7 @@ const EmployerDashboard = () => {
                     onClick={() => navigate(action.path)}
                     className="flex items-center p-4 rounded-xl border border-gray-100 hover:border-gray-200 hover:shadow-sm transition-all duration-200 text-left">
                     <div className={`p-2 rounded-lg ${action.color}`}>
-                      <action.icon className="" />
+                      {/* <action.icon className="" /> */}
                       <Icon className="w-5 h-5" />
                     </div>
                     <span className="font-medium text-gray-900">
