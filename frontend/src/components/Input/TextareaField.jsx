@@ -34,13 +34,13 @@ const TextareaField = ({
         {...props}
       />
       {error && (
-        <div className="">
-          <AlertCircle className="" />
+        <div className="flex items-center space-x-1 text-sm text-red-600">
+          <AlertCircle className="w-4 h-4" />
           <span>{error}</span>
         </div>
       )}
       {helperText && !error && (
-        <p className="">{helperText}</p>
+        <p className="text-sm text-gray-500">{helperText}</p>
       )}
     </div>
 

@@ -156,6 +156,7 @@ const JobPostingForm = () => {
                     icon={Briefcase}
                   />
                 </div>
+
                 {/* Requirements */}
                 <TextareaField
                   label="Requirements"
@@ -168,7 +169,48 @@ const JobPostingForm = () => {
                   error={errors.requirements}
                   helperText="Include required skills, experience level, education, and any preferred qualications." required
                 />
-
+                {/* Salary Range */}
+                <div className="">
+                  <label className="">
+                    Salary Range <span className="">*</span>
+                  </label>
+                  <div className="">
+                    <div className="">
+                      <div className="">
+                        <DollarSign className="" />
+                      </div>
+                      <input
+                        type="number"
+                        placeholder="Min"
+                        value={formData.salaryMin}
+                        onChange={(e) =>
+                          handleInputChange("salaryMin", e.target.value)
+                        }
+                        className=""
+                      />
+                    </div>
+                    <div className="">
+                      <div className="">
+                        <DollarSign className="" />
+                      </div>
+                      <input
+                        type="number"
+                        placeholder="Max"
+                        value={formData.salaryMax}
+                        onChange={(e) =>
+                          handleInputChange("salaryMax", e.target.value)
+                        }
+                        className=""
+                      />
+                    </div>
+                  </div>
+                  {errors.salary && (
+                    <div className="">
+                      <AlertCircle className="" />
+                      <span>{errors.salary}</span>
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
           </div>
