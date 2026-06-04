@@ -17,6 +17,7 @@ import toast from "react-hot-toast";
 import InputField from '../../components/Input/InputField';
 import SelectField from '../../components/Input/SelectField';
 import TextareaField from '../../components/Input/TextareaField';
+import JobPostingPreview from '../../components/Cards/JobPostingPreview';
 
 const JobPostingForm = () => {
   const navigate = useNavigate();
@@ -56,12 +57,90 @@ const JobPostingForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const validationErrors = validateForm(formData);
+    if (Object.keys(validationErrors).length > 0) {
+      setErrors(validationErrors);
+      return;
+    }
+
+    setIsSubmitting(true);
+
+    const jobPayload = {
+      title: formData.jobTitle,
+      description: formData.description,
+      requirements: formData.requirements,
+      location: formData.location,
+      category: formData.category,
+      type: formData.jobType,
+      salaryMin: formData.salaryMin,
+      salaryMax: formData.salaryMax,
+    };
+
+    try {
+      const response = jobId
+        ? await axiosInstance.put(API_PATHS.JOBS.UPDATE_JOB(jobId), jobPayload)
+        : await axiosInstance.post(API_PATHS.JOBS.POST_JOB, jobPayload);
+
+      if (response.status === 200 || response.status === 201) {
+        toast.success(
+          jobId ? "Job Updated Successfully!" : "Job Posted Successfully!"
+        );
+        setFormData({
+          jobTitle: "",
+          location: "",
+          category: "",
+          jobType: "",
+          description: "",
+          requirements: "",
+          salaryMin: "",
+          salaryMax: "",
+        });
+        navigate("/employer-dashboard");
+        return
+      }
+      console.error("Unexpected response:", response);
+      toast.error("Something went wrong. Please try again.");
+    } catch (error) {
+      if (error.response?.data?.message) {
+        console.error("API Error:", error.response.data.message);
+        toast.error(error.response.data.message);
+      } else {
+        console.error("Unexpected error:", error);
+        toast.error("Failed to post/update job. Please try again.");
+      }
+    } finally {
+      setIsSubmitting(false);
+    }
+
   };
 
   // Form validation helper
   const validateForm = (formData) => {
     const errors = {};
+    if (!formData.jobTitle.trim()) {
+      errors.jobTitle = "Job title is required";
+    }
 
+    if (!formData.category) {
+      errors.category = "Please select a category";
+    }
+
+    if (!formData.jobType) {
+      errors.jobType = "Please select a job type";
+    }
+
+    if (!formData.description.trim()) {
+      errors.description = "Job description is required";
+    }
+    if (!formData.requirements.trim()) {
+      errors.requirements = "Job requirements are required";
+    }
+
+    if (!formData.salaryMin || !formData.salaryMax) {
+      errors.salary = "Both minimum and maximum salary are required";
+    } else if (parseInt(formData.salaryMin) >= parseInt(formData.salaryMax)) {
+      errors.salary = "Maximum salary must be greater than minimum salary";
+    }
     return errors;
   };
 
@@ -70,6 +149,13 @@ const JobPostingForm = () => {
     return Object.keys(validationErrors).length === 0;
   };
 
+  if (isPreview) {
+    return (
+      <DashboardLayout activeMenu="post-job">
+        <JobPostingPreview formData={formData} setIsPreview={setIsPreview} />
+      </DashboardLayout>
+    );
+  }
 
   return (
     <>
