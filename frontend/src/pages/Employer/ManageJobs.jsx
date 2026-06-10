@@ -45,15 +45,54 @@ const ManageJobs = () => {
     startIndex + itemsPerPage
   );
 
-  const handleSort = (field) => { };
+  const handleSort = (field) => {
+    if (sortField === field) {
+      setSortDirection(sortDirection === "asc" ? "desc" : "asc");
+    } else {
+      setSortField(field);
+      setSortDirection("asc");
+    }
+  };
+
 
   // Toggle the status of a job
-  const handleStatusChange = async (jobId) => { };
+  const handleStatusChange = async (jobId) => {
+    try {
+      const response = await axiosInstance.put(
+        API_PATHS.JOBS.TOGGLE_CLOSE(jobId)
+      );
+      getPostedJobs(true);
+    } catch (error) {
+      console.error("Error toggling job status:", error);
+    }
+  };
+
 
   // Delete a specific job
-  const handleDeleteJob = async (jobId) => { };
+  const handleDeleteJob = async (jobId) => {
+    try {
+      await axiosInstance.delete(API_PATHS.JOBS.DELETE_JOB(jobId));
+      setJobs(jobs.filter((job) => job.id !== jobId));
+      toast.success("Job listing deleted successfully");
+    } catch (error) {
+      console.error("Error deleting job:", error);
+    }
+  };
+
+
+
   // Decide which sort icon to display based on current sort field and direction
-  const SortIcon = ({ field }) => { };
+  const SortIcon = ({ field }) => {
+    if (sortField !== field) {
+      return <ChevronUp className="w-4 h-4 text-gray-400" />;
+    }
+    return sortDirection === "asc" ? (
+      <ChevronUp className="w-4 h-4 text-blue-600" />
+    ) : (
+      <ChevronDown className="w-4 h-4 text-blue-600" />
+    );
+  };
+
 
   // Loading state with animations
   const LoadingRow = () => {
@@ -147,12 +186,12 @@ const ManageJobs = () => {
           </div>
 
           {/* Filters */}
-          <div className="">
-            <div className="">
+          <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl shadow-black/5 border border-white/20 p-6 mb-8">
+            <div className="flex flex-col sm:flex-row gap-4">
               {/* Search */}
-              <div className="">
-                <div className="">
-                  <Search className="" />
+              <div className="flex-1 relative">
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <Search className="h-4 w-4 text-gray-400" />
                 </div>
 
                 <input
@@ -160,16 +199,15 @@ const ManageJobs = () => {
                   placeholder="Search jobs..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className=""
+                  className="block w-full pl-10 pr-4 py-2 text-sm border border-gray-200 rounded-lg outline-0 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all duration-200 bg-gray-50/50 placeholder-gray-400"
                 />
               </div>
               {/* Status Filter */}
-              <div className="">
+              <div className="sm:w-48">
                 <select
                   value={statusFilter}
                   onChange={(e) => setStatusFilter(e.target.value)}
-                  className=""
-                >
+                  className="block w-full px-4 py-2 text-sm border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all duration-200">
                   <option value="All">All Status</option>
                   <option value="Active">Active</option>
                   <option value="Closed">Closed</option>
@@ -178,13 +216,100 @@ const ManageJobs = () => {
             </div>
 
             {/* Results Summary */}
-            <div className="">
-              <p className="">
+            <div className="my-4">
+              <p className="text-sm text-gray-600">
                 Showing {paginatedJobs.length} of {filteredAndSortedJobs.length}{" "}
                 jobs
               </p>
             </div>
 
+            {/* Table */}
+            <div className="bg-white/80 backdrop-blur-sm rounded-2xl border border-white/20 overflow-hidden">
+              {filteredAndSortedJobs.length === 0 && !isLoading ? (
+                <div className="text-center py-12">
+                  {/* Icon Wrapper */}
+                  <div className="w-24 h-24 mx-auto bg-gray-100 rounded-full flex items-center justify-center mb-4">
+                    <Search className="h-10 w-10 text-gray-400" />
+                  </div>
+
+                  <h3 className="text-lg font-medium text-gray-900 mb-2">
+                    No jobs found
+                  </h3>
+
+                  <p className="text-gray-500">
+                    Try adjusting your search or filter criteria
+                  </p>
+                </div>
+              ) : (
+                <div className="w-[75vw] md:w-full overflow-x-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">
+                  <table className="min-w-full divide-y divide-gray-200">
+                    <thead className="bg-gradient-to-r from-gray-50 to-gray-100/50">
+                      <tr>
+                        {/* Job Title Column */}
+                        <th
+                          className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider cursor-pointer hover:bg-gray-100/60 transition-all duration-200 min-w-[200px] sm:min-w-0"
+                          onClick={() => handleSort("title")}
+                        >
+                          <div className="flex items-center space-x-1">
+                            <span>Job Title</span>
+                            <SortIcon field="title" />
+                          </div>
+                        </th>
+
+                        {/* Second Column (e.g., Company or Location) */}
+                        <th
+                          className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider cursor-pointer select-none hover:bg-gray-100/50 transition-all duration-200 min-w-[120px] sm:min-w-0"
+                          onClick={() => handleSort("status")}>
+                          <div className="flex items-center space-x-1">
+                            <span>Status</span>
+                            <SortIcon field="status" />
+                          </div>
+                        </th>
+                        {/* Applicants Column */}
+                        <th
+                          className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider cursor-pointer select-none hover:bg-gray-100/50 transition-all duration-200 min-w-[120px] sm:min-w-0"
+                          onClick={() => handleSort("applicants")}
+                        >
+                          <div className="flex items-center space-x-1">
+                            <span>Applicants</span>
+                            <SortIcon field="applicants" />
+                          </div>
+                        </th>
+
+                        {/* Actions Column */}
+                        <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider cursor-pointer select-none hover:bg-gray-100/50 transition-all duration-200 min-w-[120px] sm:min-w-0">
+                          Actions
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-gray-200 bg-white">
+                      {isLoading
+                        ? Array.from({ length: 5 }).map((_, index) => (
+                          <LoadingRow key={index} />
+                        ))
+                        : paginatedJobs.map((job) => (
+                          <tr key={job.id} className="hover:bg-gray-50 transition-colors">
+                            {/* Table Data Cells will go here */}
+                            <td className="px-6 py-4 text-sm font-medium text-gray-900 whitespace-nowrap">
+                              {job.title}
+                            </td>
+                            <td className="px-6 py-4 text-sm text-gray-500 whitespace-nowrap">
+                              {job.company}
+                            </td>
+                            <td className="px-6 py-4 text-sm text-gray-500 whitespace-nowrap">
+                              {job.applicants}
+                            </td>
+                            <td className="px-6 py-4 text-sm text-right font-medium whitespace-nowrap">
+                              <button className="text-blue-600 hover:text-blue-900 mr-4">Edit</button>
+                              <button className="text-red-600 hover:text-red-900">Delete</button>
+                            </td>
+                          </tr>
+                        ))}
+                    </tbody>
+                  </table>
+                </div>
+              )}
+            </div>
           </div>
         </div>
       </div>
