@@ -80,7 +80,6 @@ const ManageJobs = () => {
   };
 
 
-
   // Decide which sort icon to display based on current sort field and direction
   const SortIcon = ({ field }) => {
     if (sortField !== field) {
@@ -92,7 +91,6 @@ const ManageJobs = () => {
       <ChevronDown className="w-4 h-4 text-blue-600" />
     );
   };
-
 
   // Loading state with animations
   const LoadingRow = () => {
