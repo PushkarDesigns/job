@@ -182,7 +182,7 @@ const ManageJobs = () => {
 
 
   return (
-    <DashboardLayout>
+    <DashboardLayout activeMenu='manage-jobs'>
       <div className="min-h-screen p-4 sm:p-6 lg:p-8">
         <div className="max-w-7xl mx-auto">
           {/* Header */}
@@ -246,8 +246,7 @@ const ManageJobs = () => {
             </div>
 
             {JSON.stringify(filteredAndSortedJobs)}
-            {/* [
-  {
+            {/* [{
     "id": "6880fbaf9fbc84d16c6012cf6",
     "title": "Backend Developer",
     "company": "Alex William",
@@ -409,13 +408,13 @@ const ManageJobs = () => {
             </div>
 
             {/* Pagination */}
-            {/* {totalPages > 1 && ( */}
-            <div className="">
-              <div className="">
+            {totalPages > 1 && (
+            <div className="mt-6 flex items-center justify-between">
+              <div className="flex-1 flex justify-between sm:hidden">
                 <button
                   onClick={() => setCurrentPage(Math.max(1, currentPage - 1))}
                   disabled={currentPage === 1}
-                  className=""
+                  className="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   Previous
                 </button>
@@ -424,37 +423,37 @@ const ManageJobs = () => {
                     setCurrentPage(Math.min(totalPages, currentPage + 1))
                   }
                   disabled={currentPage === totalPages}
-                  className=""
+                  className="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   Next
                 </button>
               </div>
-              <div className="">
+              <div className="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
                 <div>
-                  <p className="">
+                  <p className="text-sm text-gray-700">
                     Showing{" "}
-                    <span className="">{startIndex + 1}</span> to{" "}
-                    <span className="">
+                    <span className="font-medium">{startIndex + 1}</span> to{" "}
+                    <span className="font-medium">
                       {Math.min(
                         startIndex + itemsPerPage,
                         filteredAndSortedJobs.length
                       )}
                     </span>{" "}
                     of{" "}
-                    <span className="">
+                    <span className="font-medium">
                       {filteredAndSortedJobs.length}
                     </span>{" "}
                     results
                   </p>
                 </div>
                 <div>
-                  <nav className="">
+                  <nav className="relative z-0 inline-flex rounded-md shadow-sm -space-x-px">
                     <button
                       onClick={() =>
                         setCurrentPage(Math.max(1, currentPage - 1))
                       }
                       disabled={currentPage === 1}
-                      className=""
+                      className="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 text-sm bg-white font-medium text-gray-500 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                       Previous
                     </button>
@@ -475,7 +474,7 @@ const ManageJobs = () => {
                         setCurrentPage(Math.min(totalPages, currentPage + 1))
                       }
                       disabled={currentPage === totalPages}
-                      className=""
+                      className="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-gray-500 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                       Next
                     </button>
@@ -483,7 +482,7 @@ const ManageJobs = () => {
                 </div>
               </div>
             </div>
-            {/* })} */}
+            )} 
 
           </div>
 
