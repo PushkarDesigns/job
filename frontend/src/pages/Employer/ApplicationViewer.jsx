@@ -150,18 +150,89 @@ const ApplicationViewer = () => {
                           </div>
                         </div>
                       </div>
+
+                      {/* Applications List */}
+                      <div className="p-6">
+                        <div className="space-y-4">
+                          {applications.map((application) => (
+                            <div
+                              key={application._id}
+                              className="flex flex-col md:flex-row md:items-center justify-between p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
+                            >
+                              <div className="">
+                                {/* Avatar */}
+                                <div className="">
+                                  {application.applicant.avatar ? (
+                                    <img
+                                      src={application.applicant.avatar}
+                                      alt={application.applicant.name}
+                                      className=""
+                                    />
+                                  ) : (
+                                    <div className="">
+                                      <span className="">
+                                        {getInitials(application.applicant.name)}
+                                      </span>
+                                    </div>
+                                  )}
+                                </div>
+                                {/* Applicant Info */}
+                                <div className="">
+                                  <h3 className="">
+                                    {application.applicant.name}
+                                  </h3>
+                                  <p className="">
+                                    {application.applicant.email}
+                                  </p>
+                                  <div className="">
+                                    <Calendar className="" />
+                                    <span>
+                                      Applied{" "}
+                                      {moment(application.createdAt)?.format(
+                                        "Do MM YYYY"
+                                      )}
+                                    </span>
+                                  </div>
+                                </div>
+                              </div>
+
+                              {/* Actions */}
+                              <div className="">
+                                {/* <StatusBadge status={application.status} /> */}
+                                <button
+                                  onClick={() =>
+                                    handleDownloadResume(
+                                      application.applicant.resume
+                                    )
+                                  }
+                                  className=""
+                                >
+                                  <Download className="" />
+                                  Resume
+                                </button>
+
+                                <button
+                                  onClick={() =>
+                                    setSelectedApplicant(application)
+                                  }
+                                  className=""
+                                >
+                                  <Eye className="" />
+                                  View Profile
+                                </button>
+                              </div>
+                            </div>
+                          ))}
+                          </div>
+                        </div>
+                        </div>
+                          )}
+                      </div>
                     </div>
-                  )
-                )
-              }
-              </div>
-            )}
-          </div>
-        </div>
 
-      </div>
+                    </div>
     </DashboardLayout>
-  )
-}
+          )
+            }
 
-export default ApplicationViewer;
+          export default ApplicationViewer;
