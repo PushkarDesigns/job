@@ -175,14 +175,15 @@ const JobPostingForm = () => {
             console.error("API Error:", error.response.data.message);
           }
         }
-      };
-
-      fetchJobDetails();
-      
-      return () => {
-
       }
-    }, [])
+    };
+
+    fetchJobDetails();
+
+    return () => {
+
+    }
+  }, [])
 
   if (isPreview) {
     return (
