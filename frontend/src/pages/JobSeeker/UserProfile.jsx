@@ -166,20 +166,20 @@ const UserProfile = () => {
 
                 {/* Name Input */}
                 <div>
-                  <label className="">
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
                     Full Name
                   </label>
                   <input
                     type="text"
                     value={formData.name}
                     onChange={(e) => handleInputChange("name", e.target.value)}
-                    className=""
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
                     placeholder="Enter your full name"
                   />
                 </div>
 
                 {/* Email (Read-only) */}
-                <div className="flex flex-col gap-1.5">
+                <div className="block text-sm font-medium text-gray-700 mb-2">
                   <label className="text-sm font-medium text-gray-700">
                     Email Address
                   </label>
@@ -187,45 +187,45 @@ const UserProfile = () => {
                     type="email"
                     value={formData.email}
                     disabled
-                    className="w-full px-3 py-2 bg-gray-100 border border-gray-300 text-gray-500 rounded-lg cursor-not-allowed outline-none"
-                  />
+                    className="w-full px-4 py-3 bg-gray-50 border border-gray-300 text-gray-500 rounded-lg"/>
                 </div>
 
                 {/* Resume Block */}
                 {user?.resume ? (
-                  <div className="flex flex-col gap-1.5">
-                    <label className="text-sm font-medium text-gray-700">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
                       Resume
                     </label>
 
-                    <div className="flex items-center justify-between p-3 bg-gray-50 border border-gray-200 rounded-lg">
-                      <p className="text-sm text-gray-600 truncate mr-4">
+                    <div className="flex items-center gap-2">
+                      <p className="text-sm text-gray-600">
                         Link:{" "}
                         <a
                           href={user?.resume}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="text-blue-600 hover:text-blue-800 hover:underline font-medium break-all"
+                          className="text-blue-600 underline cursor-pointer"
                         >
                           {user?.resume}
                         </a>
                       </p>
 
                       <button
-                        className="p-1.5 text-gray-400 hover:text-red-600 hover:bg-gray-100 rounded-md transition-colors"
+                        className="cursor-pointer"
                         onClick={DeleteResume}
                       >
-                        <Trash2 className="w-5 h-5" />
+                        <Trash2 className="w-5 h-5 text-red-500" />
                       </button>
                     </div>
                   </div>
-                ) : ( <div className="flex flex-col gap-1.5">
-                  <label className="flex items-center justify-center px-4 py-2 bg-white border border-gray-300 rounded-lg shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 cursor-pointer transition-colors focus-within:ring-2 focus-within:ring-blue-500">
+                ) : ( 
+                <div className="block">
+                  <label className="sr-only">
                     <span className="">Choose File</span>
                     <input
                       type="file"
                       onChange={(e) => handleImageChange(e, "resume")}
-                      className="sr-only"
+                      className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 file:hover:bg-blue-100 transition-colors"
                     />
                   </label>
                 </div>
