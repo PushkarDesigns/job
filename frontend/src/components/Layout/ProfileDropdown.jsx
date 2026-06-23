@@ -102,6 +102,7 @@ const ProfileDropdown = ({
     companyName = "", // Added fallback string to prevent chatAt(0) crashes
     email,
     onLogout,
+    userRole
 }) => {
     const navigate = useNavigate();
 
