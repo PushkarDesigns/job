@@ -1,5 +1,11 @@
 import { useState } from "react";
-import { Building2, Mail, Edit3 } from "lucide-react";
+import {
+  Building2,
+  Mail,
+  Edit3,
+  X,
+  Save,
+} from "lucide-react";
 import { useAuth } from "../../context/AuthContext";
 import axiosInstance from "../../utils/axiosInstance";
 import { API_PATHS } from "../../utils/apiPaths";
@@ -32,11 +38,67 @@ const EmployerProfilePage = () => {
     }));
   };
 
-  const handleImageUpload = async (file, type) => { };
+  const handleImageUpload = async (file, type) => {
+    try {
+      setUploading((prev) => ({
+        ...prev,
+        [type]: true,
+      }));
 
-  const handleImageChange = (e, type) => { };
+      const imageUrl = await uploadImage(file);
 
-  const handleSave = async () => { };
+      if (type === "avatar") {
+        setFormData((prev) => ({
+          ...prev,
+          avatar: imageUrl,
+        }));
+      } else {
+        setFormData((prev) => ({
+          ...prev,
+          companyLogo: imageUrl,
+        }));
+      }
+    } catch (error) {
+      toast.error("Image upload failed", error);
+    } finally {
+      setUploading((prev) => ({
+        ...prev,
+        [type]: false,
+      }));
+    }
+  };
+
+  const handleImageChange = (e, type) => {
+    const file = e.target.files?.[0];
+
+    if (!file) return;
+
+    handleImageUpload(file, type);
+  };
+
+  const handleSave = async () => {
+    try {
+      setSaving(true);
+
+      const response = await axiosInstance.put(
+        API_PATHS.AUTH.UPDATE_PROFILE,
+        formData
+      );
+
+      setProfileData(formData);
+
+      if (updateUser) {
+        updateUser(response.data);
+      }
+
+      toast.success("Profile updated successfully");
+      setEditMode(false);
+    } catch (error) {
+      toast.error("Failed to update profile", error);
+    } finally {
+      setSaving(false);
+    }
+  };
 
   const handleCancel = () => {
     setFormData({ ...profileData });
@@ -213,7 +275,7 @@ const EmployerProfilePage = () => {
                 </button>
               </div>
 
- 
+
             </div>
           </div>
         </div>

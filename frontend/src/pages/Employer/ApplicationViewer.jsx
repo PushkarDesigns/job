@@ -228,7 +228,7 @@ const ApplicationViewer = () => {
                         </div>
                       </div>
                     </div>
-                  )}
+                  ))}
               </div>
             )}
           </div>
@@ -247,6 +247,7 @@ const ApplicationViewer = () => {
           )}
 
         </div>
+      </div>
     </DashboardLayout>
   )
 }
